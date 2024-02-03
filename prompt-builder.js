@@ -294,4 +294,22 @@
         document.getElementById('custom-input-6').value = '';
     });
 
+    const modal = document.getElementById('modal');
+    const promptInfo = document.getElementById('promptInfo');
+    const closeModal = document.getElementById('closeModal');
+
+    promptInfo.onclick = function() {
+        modal.classList.remove('hidden');
+    }
+
+    closeModal.onclick = function() {
+        modal.classList.add('hidden');
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
 });
