@@ -1,132 +1,232 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Construtor de Prompts para ChatGPT e cia</title>
+    <title>Construtor de Prompts para IAs</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Material Style CSS -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@materialstyle/materialstyle@3.1.1/dist/css/materialstyle.min.css"
+        integrity="sha384-TveZ4SBMG9Zwu44Pq5aK2bgL+4CaFRTtx6pSSsxmQKWhIRKoONDSRW+k+NA9A0Gk" crossorigin="anonymous">
 
- <!-- Open Graph tags -->
+    <!-- Open Graph tags -->
     <meta property="og:title" content="Construtor de Prompts para ChatGPT e cia" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://maluta.github.io/prompts-playground/build.html" />
-    <meta property="og:image" content="https://maluta.github.io/prompts-playground/dalle.png" /> <!-- Replace URL_TO_YOUR_IMAGE with the actual image URL -->
+    <meta property="og:image" content="https://maluta.github.io/prompts-playground/dalle.png" />
+    <!-- Replace URL_TO_YOUR_IMAGE with the actual image URL -->
     <meta property="og:description" content="Crie e teste prompts para ChatGPT de forma interativa e fácil." />
     <meta property="og:site_name" content="Tiago Maluta" />
-    <meta property="og:locale" content="pt_BR" /> <!-- Adjust the locale if necessary -->  </head>
+    <meta property="og:locale" content="pt_BR" /> <!-- Adjust the locale if necessary -->
 </head>
-<body class="bg-stone-100">
+</head>
 
-<div class="bg-white p-4 rounded-lg shadow">
-    <h1 class="text-3xl font-bold text-center text-blue-800">Construtor de prompts para ChatGPT, Bing, Bard, etc</h1>
-    <div class="text-center mt-2">
-        <u id="promptInfo" class="cursor-pointer text-xs">O que é um prompt?</u>
+<body class="bg-slate-300">
+
+    <div class="bg-white p-4">
+        <h1 class="text-3xl font-bold text-center text-sky-950">Construtor de prompts para ChatGPT, Bing, Gemini, etc
+        </h1>
+        <div class="text-center mt-2">
+            <u id="promptInfo" class="cursor-pointer text-xs">O que é um prompt?</u>
+        </div>
     </div>
-</div>
 
-        <!-- Modal -->
-        <div id="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3 text-center">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">O que é um Prompt?</h3>
-                    <div class="mt-2 px-7 py-3">
-                        <p class="text-sm text-gray-500">Um prompt é uma instrução ou pergunta que guia ou solicita uma resposta. No contexto de ChatGPT, Bing, Bard, etc, um prompt é usado para iniciar uma conversa ou solicitar informações específicas.</p>
-                    </div>
-                    <div class="items-center px-4 py-3">
-                        <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                            Fechar
-                        </button>
-                    </div>
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">O que é um Prompt?</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">Um prompt é uma instrução ou pergunta que guia ou solicita uma
+                        resposta. No contexto de ChatGPT, Bing, Bard, etc, um prompt é usado para iniciar uma conversa
+                        ou solicitar informações específicas.</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="closeModal"
+                        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        Fechar
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
 
-    <div class="container mx-auto p-8">
+    <div id="construtor" class="container mx-auto p-8 pb-0">
 
-  <div class="space-y-4 mb-6">
-    <button id="prefillButton-clear" class="bg-white hover:bg-gray-50 text-black font-bold py-2 px-4 rounded">🧹 Limpar</button>
-</div>
+        <div class="space-y-4 mb-6">
+            <button id="prefillButton-clear" class="bg-white hover:bg-gray-50 text-black font-bold py-2 px-4 rounded">🧹
+                Limpar</button>
+        </div>
 
         <div id="prompt-builder" class="space-y-4 mb-6">
             <!-- Dynamic prompt parts will be added here -->
         </div>
+        <div class="space-y-4 mb-6">
+            <button id="add-prompt"
+                class="bg-gray-500 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded mb-4">
+                (+) Adicionar nova parte no prompt
+            </button>
+        </div>
 
-        <button id="add-prompt" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded mb-4">
-            Adicionar Parte do Prompt
-        </button>
+        <div id="gerar-prompt" class="container text-center mb-4">
+            <div class="container mb-4">
 
-        <br>
-        <button id="prefillButton-1" class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo #1</button>
-        <button id="prefillButton-2" class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo #2</button>
-        <button id="prefillButton-3" class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo #3</button>
+                <button id="prefillButton-1"
+                    class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo de
+                    prompt
+                    #1</button>
+                <button id="prefillButton-2"
+                    class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo de
+                    prompt
+                    #2</button>
+                <button id="prefillButton-3"
+                    class="bg-yellow-100 hover:bg-yellow-50 text-black text-xs font-bold py-2 px-4 rounded">Exemplo de
+                    prompt
+                    #3</button>
 
-        <br>
-        <br>
-<span class="italic text-lg text-blue-600 font-semibold tracking-wide px-4 py-">Preencheu? Clique aqui 👉</span>
+                <h4 class="mt-3 mb-5">Experimente com exemplos, ou...</h4>
+                <!-- <span class="italic text-lg text-blue-600 font-semibold tracking-wide px-4 py-">Preencheu? Clique aqui
+                    👉</span> -->
+            </div>
 
-        <button id="generate-prompt" class="bg-sky-950 hover:bg-sky-900	 text-white font-bold py-2 text-xl px-9 rounded plausible-event-name=Gerar+Prompt+Click">
-            ✨ Gerar Prompt
-        </button>
+            <button id="generate-prompt"
+                class="bg-sky-950 hover:bg-sky-900 text-white font-bold py-2 text-2xl px-9 rounded plausible-event-name=Gerar+Prompt+Click">
+                ✨ Gerar Prompt
+            </button>
 
-        <div id="generated-prompts" class="mt-8 clear-both text-xl">
-            <!-- Generated prompts will be shown here -->
+            <div id="generated-prompts" class="mt-8 clear-both text-xl">
+                <!-- Generated prompts will be shown here -->
+            </div>
         </div>
     </div>
 
-<span class="italic text-lg text-blue-600 font-semibold tracking-wide px-4 py-">Depois cole o resultado em algum desses serviços 👇</span>
+    <div id="servicos-ai" class="container mx-auto p-8 pt-3">
+        <hr class="border-dashed" />
+        <h2 class="text-2xl text-center font-semibold my-4">Use o resultado gerado em algum desses serviços 👇</h2>
 
-        <!-- Grid start -->
+        <div class="flex flex-row">
+            <!-- Grid start -->
             <!-- ChatGPT -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://chat.openai.com/" target="_blank">ChatGPT</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://chat.openai.com/" target="_blank">ChatGPT é uma avançada IA de conversação desenvolvida pela OpenAI, capaz de entender e gerar respostas em linguagem natural. Esta ferramenta pode ser usada para uma variedade de aplicações, incluindo assistência ao cliente, educação e entretenimento.</a></p>
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
+                <h2 class="text-xl font-bold text-blue-800 my-4"><a href="https://chat.openai.com/"
+                        target="_blank">ChatGPT</a>
+                </h2>
+                <p class="text-gray-700 text-xs"><a href="https://chat.openai.com/" target="_blank">ChatGPT é uma
+                        avançada
+                        IA de
+                        conversação desenvolvida pela OpenAI, capaz de entender e gerar respostas em linguagem natural.
+                        Esta
+                        ferramenta pode ser usada para uma variedade de aplicações, incluindo assistência ao cliente,
+                        educação e
+                        entretenimento.</a></p>
             </div>
             <!-- BARD -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://bard.google.com/" target="_blank">Google Bard</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://bard.google.com/" target="_blank">O Google Bard é uma plataforma de inteligência artificial criada pelo Google, com o objetivo de produzir conteúdos tanto criativos quanto informativos ao responder perguntas dos usuários. A ferramenta visa integrar a base da buscas do Google com a habilidade de criar respostas que pareçam naturais e humanas.
-            </a></p>
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
+                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://gemini.google.com/"
+                        target="_blank">Google
+                        Gemini</a></h2>
+                <p class="text-gray-700 text-xs"><a href="https://gemini.google.com/" target="_blank">O Google Bard é
+                        uma
+                        plataforma de inteligência artificial criada pelo Google, com o objetivo de produzir conteúdos
+                        tanto
+                        criativos quanto informativos ao responder perguntas dos usuários. A ferramenta visa integrar a
+                        base
+                        da
+                        buscas do Google com a habilidade de criar respostas que pareçam naturais e humanas.
+                    </a></p>
             </div>
 
             <!-- You.com -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://you.com/" target="_blank">You.com</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://you.com/" target="_blank">You.com é um buscador focado em atender às necessidades do usuário, oferecendo resultados personalizados e seguros, com destaque para a proteção da privacidade. Seu objetivo é tornar a busca na internet mais direta e menos intrusiva.</a></p>
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
+                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://you.com/" target="_blank">You.com</a>
+                </h2>
+                <p class="text-gray-700 text-xs"><a href="https://you.com/" target="_blank">You.com é um buscador focado
+                        em
+                        atender às necessidades do usuário, oferecendo resultados personalizados e seguros, com destaque
+                        para a
+                        proteção da privacidade. Seu objetivo é tornar a busca na internet mais direta e menos
+                        intrusiva.</a>
+                </p>
             </div>
+        </div><!-- .flex-row -->
+        <div class="flex flex-row">
             <!-- Perplexity -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://www.perplexity.ai" target="_blank">Perplexity</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://www.perplexity.ai" target="_blank">Perplexity é uma plataforma de inteligência artificial que se concentra em fornecer respostas claras e precisas para perguntas complexas. Utilizando técnicas avançadas de processamento de linguagem natural, busca simplificar a busca por conhecimento e informação.</a></p>
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
+                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://www.perplexity.ai"
+                        target="_blank">Perplexity</a></h2>
+                <p class="text-gray-700 text-xs"><a href="https://www.perplexity.ai" target="_blank">Perplexity é uma
+                        plataforma
+                        de inteligência artificial que se concentra em fornecer respostas claras e precisas para
+                        perguntas
+                        complexas. Utilizando técnicas avançadas de processamento de linguagem natural, busca
+                        simplificar a
+                        busca por conhecimento e informação.</a></p>
             </div>
             <!-- Bing -->
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://copilot.microsoft.com/" target="_blank">Bing Copilot</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://copilot.microsoft.com/" target="_blank">Bing Copilot é uma evolução do Bing, o buscador da Microsoft, integrando capacidades de IA para melhorar a experiência de busca. Oferece respostas mais contextualizadas e personalizadas, visando tornar as interações com a busca online mais eficientes e humanas.</a></p>
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
+                <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://copilot.microsoft.com/"
+                        target="_blank">Bing
+                        Copilot</a></h2>
+                <p class="text-gray-700 text-xs"><a href="https://copilot.microsoft.com/" target="_blank">Bing Copilot é
+                        uma
+                        evolução do Bing, o buscador da Microsoft, integrando capacidades de IA para melhorar a
+                        experiência
+                        de
+                        busca. Oferece respostas mais contextualizadas e personalizadas, visando tornar as interações
+                        com a
+                        busca online mais eficientes e humanas.</a></p>
             </div>
             <!-- Bing -->
-            <div class="bg-white p-4 rounded-lg shadow">
+            <div class="bg-slate-200 basis-1/3 rounded-lg shadow-md box-content p-3 m-2">
                 <h2 class="text-xl font-bold text-blue-800 mb-2"><a href="https://poe.com/" target="_blank">Poe</a></h2>
-                <p class="text-gray-700 text-xs"><a href="https://poe.com/" target="_blank">Poe é uma plataforma de inteligência artificial que permite aos usuários interagir com uma variedade de modelos de IA, incluindo ChatGPT e outros agentes de conversação. Oferece um espaço para explorar diferentes personalidades e capacidades de IA, promovendo uma interação mais diversificada e personalizada.</a></p>
+                <p class="text-gray-700 text-xs"><a href="https://poe.com/" target="_blank">Poe é uma plataforma de
+                        inteligência
+                        artificial que permite aos usuários interagir com uma variedade de modelos de IA, incluindo
+                        ChatGPT
+                        e
+                        outros agentes de conversação. Oferece um espaço para explorar diferentes personalidades e
+                        capacidades
+                        de IA, promovendo uma interação mais diversificada e personalizada.</a></p>
             </div>
+        </div><!-- .flex-row -->
+    </div>
 
-<br /><br /><br />
-            <div class="place-content-center">
-            <span class="box-decoration-slice bg-gradient-to-r from-indigo-600 to-blue-500 text-xs text-white px-2 place-content-center">
-  Feito com 💛<br />
-</span>
-<span class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-2 text-sm place-content-center">
-  <a href="https://www.linkedin.com/in/maluta/">Manda um alô!</a>
-</span></div>
 
-<footer class="bg-gray-100 text-center text-sm p-4 text-gray-600">
-Os dados que você digitar nesta página não serão salvos automaticamente. Lembre-se de salvar seus prompts manualmente antes de fechar ou atualizar a página. Além disso, garanto que nenhum dado inserido ou utilizado aqui nessa página será armazenado ou compartilhado comigo ou com terceiros.
-</footer>
-<footer class="bg-gray-100 text-center text-sm p-4 text-gray-600">
-Veja o <a href="https://github.com/maluta/prompts-playground/tree/gh-pages">código-fonte</a></footer>
+
+    <div id="assinatura" class="container mx-auto text-center px-8 py-3">
+        <hr class="border-dashed mb-5" />
+        <span
+            class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-2 text-sm place-content-center inline-block">
+            Feito com 💛
+        </span>
+        <span
+            class="box-decoration-clone bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-2 text-sm place-content-center  inline-block hover:text-white">
+            <a href="https://www.linkedin.com/in/maluta/">Manda um alô!</a>
+        </span>
+    </div>
+
+    <footer class="bg-gray-100 text-center text-xs p-0 text-gray-600">
+        <div class="container mx-auto p-8 pb-2 pt-3">
+            Os dados que você digitar nesta página não serão salvos automaticamente. <br>
+            Lembre-se de salvar seus prompts manualmente antes de fechar ou atualizar a página. <br>
+            Além disso, garanto que nenhum dado inserido ou utilizado
+            aqui nessa página será armazenado ou compartilhado comigo ou com terceiros.
+        </div>
+    </footer>
+    <footer class="bg-slate-200 text-center text-sm p-4 pb-3 text-gray-600">
+        <a href="https://github.com/maluta/prompts-playground/tree/gh-pages"
+            class="inline-block p-2 px-4 rounded-lg bg-gray-400 hover:bg-gray-700 text-gray-50 hover:text-white">
+            Veja o código-fonte</a>
+    </footer>
+
 
     <script src="prompt-builder.js"></script> <!-- External JS file -->
-    <script defer data-domain="maluta.github.io" src="https://plausible.io/js/script.tagged-events.outbound-links.js"></script>
+    <script defer data-domain="maluta.github.io"
+        src="https://plausible.io/js/script.tagged-events.outbound-links.js"></script>
 
 </body>
+
 </html>
